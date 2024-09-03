@@ -23,12 +23,14 @@ public class LivroController {
     private LivroRepository livroRepository;
     @Autowired
     private LivroMapper livroMapper;
+    
+    Pageable paginacao = PageRequest.of(0, 2, Sort.by("título".descending()));
 
     // CRUD - Create, Read, Update, Delete
     // HTTP verbs - POST, GET, PUT, DELETE
     @PostMapping
     public ResponseEntity<LivroResponse> createLivro(@Valid @RequestBody LivroRequest livroRequest) {
-        Livro livroConvertido = livroMapper.requestToLivro(livroRequest);
+        Page<Livro> = listaLivros.requestToLivro(livroRequest);
         Livro livroCriado = livroRepository.save(livroConvertido);
         LivroResponse livroResponse = livroMapper.livroToResponse(livroCriado);
         return new ResponseEntity<>(livroResponse, HttpStatus.CREATED);
