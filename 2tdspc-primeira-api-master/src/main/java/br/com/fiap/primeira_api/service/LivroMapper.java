@@ -18,6 +18,17 @@ public class LivroMapper {
         return livro;
     }
 
+    //livroRequestDto para livro
+    public Livro requestRecordToLivro(LivroRequestDto livroRequestdto){
+        Livro livro = new Livro();
+        livro.setTitulo(livroRequestdto .titulo());
+        livro.setAutor(livroRequestdto.getAutor());
+        livro.setCategoria(livroRequestdto.getCategoria());
+        livro.setEditora(livroRequestdto.getEditora());
+        livro.setIsbn(livroRequestdto.getIsbn());
+        return livro;
+    }
+
     // livro para livroResponse
     public LivroResponse livroToResponse(Livro livro) {
         LivroResponse livroResponse = new LivroResponse();
@@ -28,5 +39,18 @@ public class LivroMapper {
         livroResponse.setEditora(livro.getEditora());
         livroResponse.setIsbn(livro.getIsbn());
         return livroResponse;
+    }
+
+    //livro para livroResponseDTO (Record)
+    public LivroResponseDto livroResponseDto(Livro livro){
+        LivroResponseDto livroResponseDto = new LivroReponsetDto(
+            livro.getId(),
+            livro.getTitulo(),
+            livro.getAutor(),
+            livro.getCategoria().toString(),
+            livro.getEditora(),
+            livro.getIsbn(),
+            link
+        );
     }
 }
