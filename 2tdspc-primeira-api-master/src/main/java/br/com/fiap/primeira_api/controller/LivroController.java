@@ -1,12 +1,18 @@
 package br.com.fiap.primeira_api.controller;
 
 import br.com.fiap.primeira_api.dto.LivroRequest;
+import br.com.fiap.primeira_api.dto.LivroRequestDto;
 import br.com.fiap.primeira_api.dto.LivroResponse;
+import br.com.fiap.primeira_api.dto.LivroResponseDto;
+import br.com.fiap.primeira_api.model.Categoria;
 import br.com.fiap.primeira_api.model.Livro;
 import br.com.fiap.primeira_api.repository.LivroRepository;
 import br.com.fiap.primeira_api.service.LivroMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +33,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 // localhost:8080/livros
-@RequestMapping(value = "/livros", produces = {"aplication/json"})
+@RequestMapping(value = "/livros", produces = {"application/json"})
 @Tag(name = "api-livros")
 public class LivroController {
     @Autowired
@@ -40,23 +46,25 @@ public class LivroController {
     // CRUD - Create, Read, Update, Delete
     // HTTP verbs - POST, GET, PUT, DELETE
 
-    @Operation(summary = "Cria um livro e o grava no banco")
+    @Operation(summary = "Cria um livro e grava no banco")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "Atributos informados são inválidos", content = @Content(schema = @Schema())),
-        @ApiResponse(responseCode = "201", description = "Livro cadastrado com sucesso")
+            @ApiResponse(responseCode = "201", description = "Livro cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Atributos informados são inválidos",
+                    content = @Content(schema = @Schema()))
     })
     @PostMapping
-    public ResponseEntity<LivroResponse> createLivro(@Valid @RequestBody LivroRequest livroRequest) {
-        Livro livroConvertido = livroMapper.requestToLivro(livroRequest);
+    public ResponseEntity<LivroResponseDto> createLivro(@Valid @RequestBody LivroRequestDto livroRequest) {
+        Livro livroConvertido = livroMapper.requestRecordToLivro(livroRequest);
         Livro livroCriado = livroRepository.save(livroConvertido);
-        LivroResponse livroResponse = livroMapper.livroToResponse(livroCriado);
+        LivroResponseDto livroResponse = livroMapper.livroToResponseDTO(livroCriado, null);
         return new ResponseEntity<>(livroResponse, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Retorna todos os livros persistidos")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Nenhum livro encontrado", content = @Content(schema = @Schema())),
-        @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso")
+            @ApiResponse(responseCode = "204", description = "Nenhum livro encontrado",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso")
     })
     @GetMapping
     public ResponseEntity<List<LivroResponse>> readLivros() {
@@ -78,10 +86,11 @@ public class LivroController {
         return new ResponseEntity<>(listaLivrosResponse, HttpStatus.OK);
     }
 
-    @Operation(summary = "Retorna um lirvo dado o seu ID")
+    @Operation(summary = "Retorna um livro dado o seu ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Nenhum livro encontrado", content = @Content(schema = @Schema())),
-        @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso")
+            @ApiResponse(responseCode = "204", description = "Livro não encontrado",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso")
     })
     @GetMapping("/{id}")
     public ResponseEntity<LivroResponse> readLivro(@PathVariable Long id) {
@@ -101,8 +110,9 @@ public class LivroController {
 
     @Operation(summary = "Atualiza um livro já existente no banco")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "Livro não encontrado ou atributos informados são inválidos", content = @Content(schema = @Schema())),
-        @ApiResponse(responseCode = "200", description = "Atualização realizada com sucesso")
+            @ApiResponse(responseCode = "400", description = "Livro não encontrado ou atributos informados são inválidos",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "200", description = "Atualização realizada com sucesso")
     })
     @PutMapping("/{id}")
     public ResponseEntity<LivroResponse> update(@PathVariable Long id, @Valid @RequestBody LivroRequest livroRequest) {
@@ -117,10 +127,11 @@ public class LivroController {
         return new ResponseEntity<>(livroResponse, HttpStatus.OK);
     }
 
-    @Operation(summary = "Exclui um livro no banco de dados dado um ID")
+    @Operation(summary = "Exclui um livro do banco de dados dado um ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "Livro não encontrado", content = @Content(schema = @Schema())),
-        @ApiResponse(responseCode = "200", description = "Exclusão realizada com sucesso realizada com sucesso")
+            @ApiResponse(responseCode = "400", description = "Livro não encontrado",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "200", description = "Exclusão realizada com sucesso")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

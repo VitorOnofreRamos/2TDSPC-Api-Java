@@ -1,8 +1,11 @@
 package br.com.fiap.primeira_api.service;
 
 import br.com.fiap.primeira_api.dto.LivroRequest;
+import br.com.fiap.primeira_api.dto.LivroRequestDto;
 import br.com.fiap.primeira_api.dto.LivroResponse;
+import br.com.fiap.primeira_api.dto.LivroResponseDto;
 import br.com.fiap.primeira_api.model.Livro;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,14 +21,14 @@ public class LivroMapper {
         return livro;
     }
 
-    //livroRequestDto para livro
-    public Livro requestRecordToLivro(LivroRequestDto livroRequestdto){
+    // livroRequestDTO (Record) para Livro
+    public Livro requestRecordToLivro(LivroRequestDto livroRequestDTO) {
         Livro livro = new Livro();
-        livro.setTitulo(livroRequestdto .titulo());
-        livro.setAutor(livroRequestdto.getAutor());
-        livro.setCategoria(livroRequestdto.getCategoria());
-        livro.setEditora(livroRequestdto.getEditora());
-        livro.setIsbn(livroRequestdto.getIsbn());
+        livro.setTitulo(livroRequestDTO.titulo());
+        livro.setAutor(livroRequestDTO.autor());
+        livro.setCategoria(livroRequestDTO.categoria());
+        livro.setEditora(livroRequestDTO.editora());
+        livro.setIsbn(livroRequestDTO.isbn());
         return livro;
     }
 
@@ -41,16 +44,16 @@ public class LivroMapper {
         return livroResponse;
     }
 
-    //livro para livroResponseDTO (Record)
-    public LivroResponseDto livroResponseDto(Livro livro){
-        LivroResponseDto livroResponseDto = new LivroReponsetDto(
-            livro.getId(),
-            livro.getTitulo(),
-            livro.getAutor(),
-            livro.getCategoria().toString(),
-            livro.getEditora(),
-            livro.getIsbn(),
-            link
+    // livro para livroResponseDTO (Record)
+    public LivroResponseDto livroToResponseDTO(Livro livro, Link link) {
+        return new LivroResponseDto(
+                livro.getId(),
+                livro.getTitulo(),
+                livro.getAutor(),
+                livro.getCategoria().toString(),
+                livro.getEditora(),
+                livro.getIsbn(),
+                link
         );
     }
 }
