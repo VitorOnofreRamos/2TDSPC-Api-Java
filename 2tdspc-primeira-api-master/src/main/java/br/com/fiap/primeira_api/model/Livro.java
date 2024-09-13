@@ -19,6 +19,8 @@ public class Livro {
     private String editora;
     @Column(name = "livro_isbn")
     private String isbn;
+    @ManyToMany(mappedBy = "livros")
+    private Prateleira prateleira;
 
     public Long getId() {
         return id;
@@ -66,5 +68,13 @@ public class Livro {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public Prateleira getPrateleira() {
+        return prateleira;
+    }
+
+    public void setPrateleira(Prateleira prateleira) {
+        this.prateleira = prateleira;
     }
 }

@@ -56,7 +56,7 @@ public class LivroController {
     public ResponseEntity<LivroResponseDto> createLivro(@Valid @RequestBody LivroRequestDto livroRequest) {
         Livro livroConvertido = livroMapper.requestRecordToLivro(livroRequest);
         Livro livroCriado = livroRepository.save(livroConvertido);
-        LivroResponseDto livroResponse = livroMapper.livroToResponseDTO(livroCriado, null);
+        LivroResponseDto livroResponse = livroMapper.livroToResponseDto(livroCriado, null);
         return new ResponseEntity<>(livroResponse, HttpStatus.CREATED);
     }
 
@@ -67,14 +67,14 @@ public class LivroController {
             @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso")
     })
     @GetMapping
-    public ResponseEntity<List<LivroResponse>> readLivros() {
+    public ResponseEntity<List<LivroResponseDto>> readLivros() {
         Page<Livro> listaLivros = livroRepository.findAll(paginacao);
         if (listaLivros.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<LivroResponse> listaLivrosResponse = new ArrayList<>();
+        List<LivroResponseDto> listaLivrosResponse = new ArrayList<>();
         for (Livro livro : listaLivros) {
-            LivroResponse livroResponse = livroMapper.livroToResponse(livro);
+            LivroResponseDto livroResponse = livroMapper.livroToResponseDto(livro, link);
             livroResponse.setLink(
                     linkTo(
                             methodOn(LivroController.class)

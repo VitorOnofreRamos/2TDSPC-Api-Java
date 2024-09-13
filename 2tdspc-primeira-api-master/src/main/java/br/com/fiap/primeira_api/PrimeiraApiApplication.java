@@ -13,5 +13,4 @@ public class PrimeiraApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PrimeiraApiApplication.class, args);
 	}
-
 }

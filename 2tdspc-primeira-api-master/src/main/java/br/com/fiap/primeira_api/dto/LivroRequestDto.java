@@ -18,5 +18,4 @@ public record LivroRequestDto(
         String editora,
         @Pattern(regexp = "^\\d{10}$|^\\d{13}$", message = "O ISBN deve ter 10 ou 13 dígitos")
         String isbn
-) {
-}
+){}

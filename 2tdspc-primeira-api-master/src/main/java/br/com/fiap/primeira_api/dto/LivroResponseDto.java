@@ -10,5 +10,4 @@ public record LivroResponseDto(
         String editora,
         String isbn,
         Link link
-) {
-}
+){}
